@@ -14,41 +14,46 @@
       width: 100%;
     }
   </style>
-  <script src="../../../js/component_utils.js"></script>
-  <script>window.GaiaRadioBaseurl = '../';</script>
+  <script>
+    window.packagesUrl = '../bower_components/';
+    window.GaiaRadioBaseUrl = '../';
+  </script>
+  <script src="../bower_components/gaia-component-utils/index.js"></script>
   <script src="../script.js"></script>
-  <script defer src="example.js"></script>
-
-  <!-- List styling -->
-  <link href="../../../style/lists.css" rel="stylesheet">
 </head>
 <body role="application">
-  <section data-type="list">
-    <header>With class="inline":</header>
+  <section>
+    <gaia-radio name="a"></gaia-radio>
+    <gaia-radio checked name="a"></gaia-radio>
+    <gaia-radio danger name="a"></gaia-radio>
+  </section>
+  <section>
     <ul>
       <li>
-        <gaia-radio name="first" class="inline"></gaia-radio>
-        <gaia-radio name="first" checked class="inline"></gaia-radio>
+        <label for="b1">I'm a label</label>
+        <gaia-radio id="b1" name="b"></gaia-radio>
       </li>
       <li>
-        <gaia-radio name="second" class="danger inline"></gaia-radio>
-        <gaia-radio name="second" checked class="danger inline"></gaia-radio>
+        <label for="b2">I'm a label</label>
+        <gaia-radio id="b2" name="b"></gaia-radio>
       </li>
-    </ul>
-    <header>With an inner label:</header>
-    <ul role="menu">
-      <li role="presentation">
-        <gaia-radio name="third" data-role="menuitemradio" checked>
-          <p>Here is the first option</p>
-        </gaia-radio>
-      </li>
-      <li role="presentation">
-        <gaia-radio name="third" data-role="menuitemradio">
-          <p>Here is the second option</p>
-        </gaia-radio>
+      <li>
+        <label for="b3">I'm a label</label>
+        <gaia-radio id="b3" name="b"></gaia-radio>
       </li>
     </ul>
   </section>
   <div id="result"></div>
+  <script>
+    var result = document.getElementById('result');
+    var elements = document.querySelectorAll('gaia-radio');
+
+    [].forEach.call(elements, function(radio, index) {
+      radio.addEventListener('click', function(e) {
+        result.textContent = 'Click event for: ' + (index + 1) + ' value: ' +
+          e.target.checked;
+      });
+    });
+  </script>
 </body>
 </html>

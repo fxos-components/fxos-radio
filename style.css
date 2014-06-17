@@ -1,35 +1,45 @@
-#radio {
+
+gaia-radio {
   display: inline-block;
-  vertical-align: middle;
-  width: 100%;
-  height: 5rem;
-  position: relative;
-  background: none;
-}
-
-#radio.inline {
-  width: 5rem;
-}
-
-#radio span:after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 50%;
-  margin: -1.1rem 0 0 -1.1rem;
   width: 2.2rem;
   height: 2.2rem;
 }
 
-#radio span:after {
-  background: url(images/default.png) no-repeat center top / 2.2rem auto;
+/** Inner
+ ---------------------------------------------------------*/
+
+.inner {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border-radius: 50%;
+  border: solid 2px;
+  color: var(--color, #00AACC);
 }
 
-#radio.checked span:after {
-  background-position: center bottom;
+/**
+ * danger
+ */
+
+[danger].inner {
+  color: var(--color-danger, #B90000);
 }
 
-/* 'Dangerous' radio */
-#radio.danger span:after {
-  background-image: url(images/danger.png);
+/** Circle
+ ---------------------------------------------------------*/
+
+[checked].inner:after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 0.5rem);
+  left: calc(50% - 0.5rem);
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  background: currentColor;
+  border-radius: 50%;
 }

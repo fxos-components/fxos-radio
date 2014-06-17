@@ -1,113 +1,150 @@
+(function(define){define(function(require,exports,module){
 'use strict';
-/* global ComponentUtils */
 
-window.GaiaRadio = (function(win) {
-  // Extend from the HTMLElement prototype
-  var proto = Object.create(HTMLElement.prototype);
+/**
+ * Dependencies
+ */
 
-  // Allow baseurl to be overridden (used for demo page)
-  var baseurl = window.GaiaRadioBaseurl ||
-    '/shared/elements/gaia_Radio/';
+var utils = require('gaia-component-utils');
 
-  proto.createdCallback = function() {
-    var shadow = this.createShadowRoot();
-    this._template = template.content.cloneNode(true);
+/**
+ * Locals
+ */
 
-    this._wrapper = this._template.getElementById('radio');
-    this._wrapper.addEventListener('click', this.handleClick.bind(this));
+var packagesBaseUrl = window.packagesBaseUrl || '/bower_components/';
+var baseUrl = window.GaiaRadioBaseUrl || packagesBaseUrl + 'gaia-radio/';
+var lookup = {};
 
-    // The default 'radio' accessibility role could be overridden.
-    if (this.dataset.role) {
-      this._wrapper.setAttribute('role', this.dataset.role);
-    }
+/**
+ * Prototype extends from
+ * the HTMLElement.
+ *
+ * @type {Object}
+ */
+var proto = Object.create(HTMLElement.prototype);
 
-    if (!this.hasAttribute('role')) {
-      // The root element has no accessibility use, purge it from the tree.
-      this.setAttribute('role', 'presentation');
-    }
+/**
+ * Attributes supported
+ * by this component.
+ *
+ * @type {Object}
+ */
+proto.attrs = {
+  checked: true,
+  danger: true,
+  name: true
+};
 
-    this.configureClass();
+proto.createdCallback = function() {
+  var tmpl = template.content.cloneNode(true);
+  var shadow = this.createShadowRoot();
 
-    shadow.appendChild(this._template);
+  this.inner = tmpl.getElementById('inner');
+  this.inner.addEventListener('click', this.onClick.bind(this), false);
 
-    this.checked = this.hasAttribute('checked');
-    this._wrapper.setAttribute('aria-checked', this.checked);
+  // Setup initial attributes
+  this.checked = this.getAttribute('checked');
+  this.danger = this.getAttribute('danger');
+  this.name = this.getAttribute('name');
 
-    // When events are triggered on content nodes, they do not bubble to
-    // our custom element. We add an event listener on our children so we can
-    // intercept the click and, process the state change, and notify listeners.
-    // Platform bug 887541.
-    setTimeout(function nextTick() {
-      var label = this.querySelector('label, p');
-      if (!label) {
-        return;
-      }
-      label.addEventListener('click', this.handleClick.bind(this));
-    }.bind(this));
+  shadow.appendChild(tmpl);
+  utils.style.call(this, [{ url: baseUrl + 'style.css', scoped: true }]);
 
-    ComponentUtils.style.call(this, baseurl);
-  };
+  // Bind label listeners in the next turn
+  // to make sure that HTML has been parsed.
+  setTimeout(this.bindLabels.bind(this));
+};
 
-  /**
-   * Handles a click event on the shadow dom.
-   * We handle checking/unchecking of radio elements and proxy the click
-   * event to any click listeners on the gaia-radio. This is a nice transition
-   * that preserves backwards behavior and should make it easier to port apps.
-   */
-  proto.handleClick = function(e) {
+proto.bindLabels = function() {
+  if (!this.id) { return; }
+  var fn = this.onClick.bind(this);
+  var selector = 'label[for="' + this.id + '"]';
+  var els = document.querySelectorAll(selector);
+  console.log(this.id, els.length, selector);
+  [].forEach.call(els, function(el) { el.addEventListener('click', fn); });
+};
 
-    // Uncheck other radio elements with the same name and check this one.
-    var relevant = document.querySelectorAll(
-      'gaia-radio[name="' + this.getAttribute('name') + '"]');
-    for (var i = 0, iLen = relevant.length; i < iLen; i++) {
-      relevant[i].checked = false;
-    }
-    this.checked = !this.checked;
+proto.attributeChangedCallback = function(name, from, to) {
+  if (this.attrs[name]) { this[name] = to; }
+};
 
-    // We add this event listener twice (see above) on both the content and
-    // custom element nodes. We need to stop the event propagation to prevent
-    // this event from firing against both nodes.
-    e.stopImmediatePropagation();
+/**
+ * Handles a click event on the shadow dom.
+ * We handle checking/unchecking of radio elements and proxy the click
+ * event to any click listeners on the gaia-radio. This is a nice transition
+ * that preserves backwards behavior and should make it easier to port apps.
+ */
+proto.onClick = function(e) {
+  this.checked = true;
 
-    // Dispatch a click event to any listeners to the app.
-    // We should be able to remove this when bug 887541 lands.
-    var event = new MouseEvent('click', {
-      view: window,
-      bubbles: true,
-      cancelable: true
-    });
-    this.dispatchEvent(event);
-  };
+  // Dispatch a click event to any listeners to the app.
+  // We should be able to remove this when bug 887541 lands.
+  this.dispatchEvent(new MouseEvent('click', {
+    view: window,
+    bubbles: true,
+    cancelable: true
+  }));
+};
 
-  /**
-   * Configures the class for the element.
-   */
-  proto.configureClass = function() {
-    this._wrapper.className = this.className;
-  };
+proto.toggle = function(value) {
+  value = arguments.length ? value : !this.checked;
+  if (value || value === '') { this.check(); }
+  else { this.uncheck(); }
+};
 
-  /**
-   * Handle setting/getting of the checked property.
-   */
-  Object.defineProperty(proto, 'checked', {
-    get: function() {
-      return this._checked;
-    },
+proto.check = function() {
+  if (this.checked) { return; }
+  this.uncheckGroup();
+  this.inner.setAttribute('checked', '');
+  this.setAttribute('checked', '');
+  this._checked = true;
+};
+
+proto.uncheck = function() {
+  if (!this.checked) { return; }
+  this.inner.removeAttribute('checked');
+  this.removeAttribute('checked');
+  this._checked = false;
+};
+
+proto.uncheckGroup = function() {
+  var selector = 'gaia-radio[name="' + this.name + '"]';
+  var els = document.querySelectorAll(selector);
+  [].forEach.call(els, function(el) { el.checked = false; });
+};
+
+/**
+ * Handle setting/getting of the checked property.
+ */
+Object.defineProperties(proto, {
+  checked: {
+    get: function() { return this._checked; },
+    set: proto.toggle
+  },
+  danger: {
+    get: function() { return this._danger; },
     set: function(value) {
-      this._wrapper.classList.toggle('checked', value);
-      this._wrapper.setAttribute('aria-checked', value);
-      this._checked = value;
+      if (value || value === '') { this.inner.setAttribute('danger', value); }
+      else { this.inner.removeAttribute('danger'); }
+      this._danger = value;
     }
-  });
+  },
+  name: {
+    get: function() { return this._name; },
+    set: function(value) {
+      if (value === null) { this.inner.removeAttribute('name'); }
+      else { this.inner.setAttribute('name', value); }
+      this._name = value;
+    }
+  }
+});
 
-  // Handle both p and label elements for now to support existing
-  // building blocks. Mainly radio labels and inputs inside a list
-  // as this is a rather common use case.
-  var template = document.createElement('template');
-  template.innerHTML = '<span role="radio" id="radio">' +
-      '<span><content select="p,label"></content></span>' +
-    '</span>';
+var template = document.createElement('template');
+template.innerHTML = '<button class="inner" id="inner"></button>';
 
-  // Register and return the constructor
-  return document.registerElement('gaia-radio', { prototype: proto });
-})(window);
+// Register and return the constructor
+module.exports = document.registerElement('gaia-radio', { prototype: proto });
+
+});})((function(n,w){return typeof define=='function'&&define.amd?
+define:typeof module=='object'?function(c){c(require,exports,module);}:function(c){
+var m={exports:{}},r=function(n){return w[n];};w[n]=c(r,m.exports,m)||m.exports;};})('gaia-radio',this));
