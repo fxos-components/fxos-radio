@@ -9,9 +9,32 @@
     body {
       margin: 0;
       padding: 0;
-      font-size: 10px;
+      font: 10px sans-serif;
       background-color: #fff;
       width: 100%;
+      color: #444;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      list-style-type: none;
+      font-size: 16px;
+      padding: 0 1rem;
+      align-items: center;
+      border-bottom: solid 1px #eee;
+    }
+
+    li label {
+      flex: 1;
+      padding: 2rem 0;
+    }
+
+    li gaia-radio {
     }
   </style>
   <script>
@@ -23,23 +46,18 @@
 </head>
 <body role="application">
   <section>
-    <gaia-radio name="a"></gaia-radio>
-    <gaia-radio checked name="a"></gaia-radio>
-    <gaia-radio danger name="a"></gaia-radio>
-  </section>
-  <section>
     <ul>
       <li>
         <label for="b1">I'm a label</label>
-        <gaia-radio id="b1" name="b"></gaia-radio>
+        <gaia-radio id="b1" name="b" checked></gaia-radio>
       </li>
       <li>
         <label for="b2">I'm a label</label>
         <gaia-radio id="b2" name="b"></gaia-radio>
       </li>
       <li>
-        <label for="b3">I'm a label</label>
-        <gaia-radio id="b3" name="b"></gaia-radio>
+        <label for="b3">This is danderous</label>
+        <gaia-radio id="b3" name="b" danger></gaia-radio>
       </li>
     </ul>
   </section>
