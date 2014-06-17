@@ -1,4 +1,4 @@
-# &lt;gaia-radio&gt;
+# &lt;gaia-radio&gt; ![](https://travis-ci.org/gaia-components/gaia-radio.svg)
 
 ## Installation
 
