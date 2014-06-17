@@ -11,8 +11,10 @@
     "**/.*",
     "node_modules",
     "bower_components",
+    "examples",
     "test",
-    "tests"
+    "tests",
+    "README.md"
   ],
   "dependencies": {
     "gaia-component-utils": "gaia-components/gaia-component-utils#~0.1.0"
