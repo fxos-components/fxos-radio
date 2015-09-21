@@ -1,150 +1,239 @@
-(function(define){define(function(require,exports,module){
-'use strict';
+/*globals define*/
+
+(function(define){'use strict';define(function(require,exports,module){
 
 /**
  * Dependencies
  */
-
-var utils = require('gaia-component-utils');
-
-/**
- * Locals
- */
-
-var packagesBaseUrl = window.packagesBaseUrl || '/bower_components/';
-var baseUrl = window.GaiaRadioBaseUrl || packagesBaseUrl + 'gaia-radio/';
-var lookup = {};
+var component = require('gaia-component');
 
 /**
- * Prototype extends from
- * the HTMLElement.
+ * Simple logger (toggle 0)
  *
- * @type {Object}
+ * @type {Function}
  */
-var proto = Object.create(HTMLElement.prototype);
+var debug = 0 ? console.log.bind(console) : function() {};
 
 /**
- * Attributes supported
- * by this component.
- *
- * @type {Object}
+ * Exports
  */
-proto.attrs = {
-  checked: true,
-  danger: true,
-  name: true
-};
+module.exports = component.register('gaia-radio', {
+  created: function() {
+    this.setupShadowRoot();
 
-proto.createdCallback = function() {
-  var tmpl = template.content.cloneNode(true);
-  var shadow = this.createShadowRoot();
+    // Elements
+    this.els = {
+      inner: this.shadowRoot.querySelector('.inner')
+    };
 
-  this.inner = tmpl.getElementById('inner');
-  this.inner.addEventListener('click', this.onClick.bind(this), false);
+    // Events
+    on(this, 'click', e => this.onClick(e));
 
-  // Setup initial attributes
-  this.checked = this.getAttribute('checked');
-  this.danger = this.getAttribute('danger');
-  this.name = this.getAttribute('name');
+    // Properties
+    this.checked = this.getAttribute('checked');
+    this.disabled = this.getAttribute('disabled');
+    this.danger = this.getAttribute('danger');
+    this.name = this.getAttribute('name');
 
-  shadow.appendChild(tmpl);
-  utils.style.call(this, [{ url: baseUrl + 'style.css', scoped: true }]);
-
-  // Bind label listeners in the next turn
-  // to make sure that HTML has been parsed.
-  setTimeout(this.bindLabels.bind(this));
-};
-
-proto.bindLabels = function() {
-  if (!this.id) { return; }
-  var fn = this.onClick.bind(this);
-  var selector = 'label[for="' + this.id + '"]';
-  var els = document.querySelectorAll(selector);
-  console.log(this.id, els.length, selector);
-  [].forEach.call(els, function(el) { el.addEventListener('click', fn); });
-};
-
-proto.attributeChangedCallback = function(name, from, to) {
-  if (this.attrs[name]) { this[name] = to; }
-};
-
-/**
- * Handles a click event on the shadow dom.
- * We handle checking/unchecking of radio elements and proxy the click
- * event to any click listeners on the gaia-radio. This is a nice transition
- * that preserves backwards behavior and should make it easier to port apps.
- */
-proto.onClick = function(e) {
-  this.checked = true;
-
-  // Dispatch a click event to any listeners to the app.
-  // We should be able to remove this when bug 887541 lands.
-  this.dispatchEvent(new MouseEvent('click', {
-    view: window,
-    bubbles: true,
-    cancelable: true
-  }));
-};
-
-proto.toggle = function(value) {
-  value = arguments.length ? value : !this.checked;
-  if (value || value === '') { this.check(); }
-  else { this.uncheck(); }
-};
-
-proto.check = function() {
-  if (this.checked) { return; }
-  this.uncheckGroup();
-  this.inner.setAttribute('checked', '');
-  this.setAttribute('checked', '');
-  this._checked = true;
-};
-
-proto.uncheck = function() {
-  if (!this.checked) { return; }
-  this.inner.removeAttribute('checked');
-  this.removeAttribute('checked');
-  this._checked = false;
-};
-
-proto.uncheckGroup = function() {
-  var selector = 'gaia-radio[name="' + this.name + '"]';
-  var els = document.querySelectorAll(selector);
-  [].forEach.call(els, function(el) { el.checked = false; });
-};
-
-/**
- * Handle setting/getting of the checked property.
- */
-Object.defineProperties(proto, {
-  checked: {
-    get: function() { return this._checked; },
-    set: proto.toggle
+    // Bind label listeners in the next turn
+    // to make sure that HTML has been parsed.
+    setTimeout(() => {
+      this.bindLabels();
+      this.makeAccessible();
+    });
   },
-  danger: {
-    get: function() { return this._danger; },
-    set: function(value) {
-      if (value || value === '') { this.inner.setAttribute('danger', value); }
-      else { this.inner.removeAttribute('danger'); }
-      this._danger = value;
+
+  /**
+   * Accessibility enhancements.
+   * Read gaia-radio as radio button.
+   * make it tabable
+   * read its checked and disabled state
+   */
+  makeAccessible: function() {
+    this.setAttribute('role', 'radio');
+
+    // Make tabable
+    this.tabIndex = 0;
+
+    this.setAttribute('aria-checked', this.checked || this.checked === '');
+    if (this.disabled) {
+      this.setAttribute('aria-disabled', true);
     }
   },
-  name: {
-    get: function() { return this._name; },
-    set: function(value) {
-      if (value === null) { this.inner.removeAttribute('name'); }
-      else { this.inner.setAttribute('name', value); }
-      this._name = value;
+
+  /**
+   * Known attribute property
+   * descriptors.
+   *
+   * These setters get called when matching
+   * attributes change on the element.
+   *
+   * @type {Object}
+   */
+  attrs: {
+    checked: {
+      get: function() { return this._checked; },
+      set: function(value) {
+        value = arguments.length ? value : !this.checked;
+        if (value || value === '') {
+          this.check();
+        } else {
+          this.uncheck();
+        }
+      }
+    },
+
+    danger: {
+      get: function() { return this._danger; },
+      set: function(value) {
+        debug('set danger', value);
+        if (value || value === '') {
+          this.els.inner.setAttribute('danger', value);
+        } else {
+          this.els.inner.removeAttribute('danger');
+        }
+        this._danger = value;
+      }
+    },
+
+    name: {
+      get: function() { return this._name; },
+      set: function(value) {
+        debug('set name', value);
+        if (value === null) {
+          this.els.inner.removeAttribute('name');
+        } else {
+          this.els.inner.setAttribute('name', value);
+        }
+        this._name = value;
+      }
+    },
+
+    disabled: {
+      get: function() { return this._disabled; },
+      set: function(value) {
+        value = !!(value || value === '');
+        if (this._disabled === value) { return; }
+        debug('set disabled', value);
+        this._disabled = value;
+        if (value) {
+          this.setAttribute('disabled', '');
+          this.setAttribute('aria-disabled', true);
+        } else {
+          this.removeAttribute('disabled');
+          this.removeAttribute('aria-disabled');
+        }
+      }
     }
-  }
+  },
+
+ /**
+  * Handles a click event.
+  */
+  onClick: function(e) {
+    debug('click', e);
+    e.stopPropagation();
+    if (this.disabled) { return; }
+    this.checked = true;
+  },
+
+  bindLabels: function() {
+    if (!this.id) {
+      debug('no id provided to associate with a label');
+      return;
+    }
+    debug('binding a label to gaia-radio');
+    var selector = `label[for="${this.id}"]`;
+    var els = document.querySelectorAll(selector);
+    debug(this.id, els.length, selector);
+    [].forEach.call(els, el => on(el, 'click', e => this.onClick(e)));
+  },
+
+  check: function() {
+    if (this.checked) { return; }
+    this.uncheckGroup();
+    this.setAttr('checked', '');
+    this.setAttribute('aria-checked', true);
+    this._checked = true;
+  },
+
+  uncheck: function() {
+    if (!this.checked) { return; }
+    this.removeAttr('checked');
+    this.setAttribute('aria-checked', false);
+    this._checked = false;
+  },
+
+  uncheckGroup: function() {
+    var selector = `gaia-radio[name="${this.name}"]`;
+    var els = document.querySelectorAll(selector);
+    [].forEach.call(els, el => el.checked = false);
+  },
+
+  template: `
+    <button class="inner" id="inner" role="presentation"></button>
+
+    <style>
+
+    :host {
+      display: inline-block;
+      width: 2.2rem;
+      height: 2.2rem;
+      outline: 0;
+    }
+
+    :host([disabled]) {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /**
+     * Inner
+     */
+
+    .inner {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: none;
+      border-radius: 50%;
+      border: solid 2px;
+      color: var(--color, #00AACC);
+    }
+
+    /**
+     * danger
+     */
+
+    [danger].inner {
+      color: var(--color-danger, #B90000);
+    }
+
+    /**
+     * checked
+     */
+
+    [checked].inner:after {
+      content: "";
+      position: absolute;
+      top: calc(50% - 0.5rem);
+      left: calc(50% - 0.5rem);
+      display: block;
+      width: 1rem;
+      height: 1rem;
+      background: currentColor;
+      border-radius: 50%;
+    }
+
+    </style>`
 });
 
-var template = document.createElement('template');
-template.innerHTML = '<button class="inner" id="inner"></button>';
+function on(el, name, fn) { el.addEventListener(name, fn); }
 
-// Register and return the constructor
-module.exports = document.registerElement('gaia-radio', { prototype: proto });
-
-});})((function(n,w){return typeof define=='function'&&define.amd?
-define:typeof module=='object'?function(c){c(require,exports,module);}:function(c){
-var m={exports:{}},r=function(n){return w[n];};w[n]=c(r,m.exports,m)||m.exports;};})('gaia-radio',this));
+});})((function(n,w){'use strict';return typeof define=='function'&&define.amd?
+define:typeof module=='object'?function(c){c(require,exports,module);}:
+function(c){var m={exports:{}},r=function(n){return w[n];};
+w[n]=c(r,m.exports,m)||m.exports;};})('gaia-radio',this));
