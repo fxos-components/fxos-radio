@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>&lt;gaia-radio&gt;</title>
+  <meta name="description" content="Demo app for gaia-radio" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" href="bower_components/gaia-theme/gaia-theme.css">
+  <link rel="stylesheet" href="bower_components/gaia-fonts/style.css">
+  <link rel="stylesheet" href="bower_components/base/base.css">
+  <script src="bower_components/gaia-theme/lib/gaia-theme-selector.js"></script>
+  <script src="bower_components/gaia-component/gaia-component.js"></script>
+  <script src="bower_components/gaia-list/gaia-list.js"></script>
+  <script src="gaia-radio.js"></script>
+  <style type="text/css">
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    gaia-theme-selector {
+      position: relative !important;
+      display: block;
+    }
+
+  </style>
+</head>
+<body role="application">
+  <gaia-theme-selector></gaia-theme-selector>
+  <gaia-list>
+    <li>
+      <label flex for="b1">I'm a label</label>
+      <gaia-radio id="b1" name="b" checked></gaia-radio>
+    </li>
+    <li>
+      <label flex for="b2">I'm a label</label>
+      <gaia-radio id="b2" name="b"></gaia-radio>
+    </li>
+    <li>
+      <label flex for="b3">This is danderous</label>
+      <gaia-radio id="b3" name="b" danger></gaia-radio>
+    </li>
+    <li>
+      <label flex for="b4">This is disabled</label>
+      <gaia-radio id="b4" name="b" disabled></gaia-radio>
+    </li>
+  </gaia-list>
+</body>
+</html>
