@@ -145,8 +145,14 @@ module.exports = component.register('gaia-radio', {
     debug('binding a label to gaia-radio');
     var selector = `label[for="${this.id}"]`;
     var els = document.querySelectorAll(selector);
+    var ariaLabelledByValue = '';
     debug(this.id, els.length, selector);
-    [].forEach.call(els, el => on(el, 'click', e => this.onClick(e)));
+    [].forEach.call(els, el => {
+      on(el, 'click', e => this.onClick(e));
+      // Collect all label ids to set aria-labelledby attribute
+      if (el.id) { ariaLabelledByValue += ' ' + el.id; }
+    });
+    this.setAttribute('aria-labelledby', ariaLabelledByValue.trim());
   },
 
   check: function() {
