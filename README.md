@@ -1,22 +1,22 @@
-# &lt;gaia-radio&gt; ![](https://travis-ci.org/gaia-components/gaia-radio.svg)
+# &lt;fxos-radio&gt; ![](https://travis-ci.org/fxos-components/fxos-radio.svg)
 
 ## Installation
 
 ```bash
-$ bower install gaia-components/gaia-radio
+$ bower install fxos-components/fxos-radio
 
 ```
 
 Then include folowing files in HTML
 
 ```html
-<script src="bower_components/gaia-component/gaia-component.js"></script>
-<script src="bower_components/gaia-sub-header/gaia-sub-header.js"></script>
+<script src="bower_components/fxos-component/fxos-component.js"></script>
+<script src="bower_components/fxos-radio/fxos-radio.js"></script>
 ```
 
 ## Examples
 
-- [Example](http://gaia-components.github.io/gaia-radio/)
+- [Example](http://fxos-components.github.io/fxos-radio/)
 
 ## Readiness
 

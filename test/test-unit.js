@@ -2,13 +2,13 @@
 /* global sinon, suite, setup, teardown, test, assert,
    a1, a2, a3, b1, b2, b3, b4 */
 
-suite('GaiaRadio', function() {
+suite('fxos-radio', function() {
   'use strict';
 
   var accessibility = window['test-utils'].accessibility;
 
   /**
-   * Test role and aria attributes are set correctly inside gaia-radio.
+   * Test role and aria attributes are set correctly inside fxos-radio.
    * @param  {Element} gaiaRadio gaia radio to test
    * @param  {Boolean?} checked optional expected aria-checked value
    * @param  {Boolean?} disabled optional expected aria-disabled value
@@ -23,17 +23,17 @@ suite('GaiaRadio', function() {
     this.sandbox = sinon.sandbox.create();
     this.container = document.createElement('div');
     this.container.innerHTML = `
-      <gaia-radio id="a1" name="a"></gaia-radio>
-      <gaia-radio id="a2" name="a" checked ></gaia-radio>
-      <gaia-radio id="a3" name="a"></gaia-radio>
+      <fxos-radio id="a1" name="a"></fxos-radio>
+      <fxos-radio id="a2" name="a" checked ></fxos-radio>
+      <fxos-radio id="a3" name="a"></fxos-radio>
 
       <label id="label" for="b1">B1 Label</label>
-      <gaia-radio id="b1" name="b"></gaia-radio>
-      <gaia-radio id="b2" name="b" checked></gaia-radio>
-      <gaia-radio id="b3" name="b"></gaia-radio>
-      <gaia-radio id="b4" name="b" disabled></gaia-radio>`;
+      <fxos-radio id="b1" name="b"></fxos-radio>
+      <fxos-radio id="b2" name="b" checked></fxos-radio>
+      <fxos-radio id="b3" name="b"></fxos-radio>
+      <fxos-radio id="b4" name="b" disabled></fxos-radio>`;
 
-    this.radios = this.container.querySelectorAll('gaia-radio');
+    this.radios = this.container.querySelectorAll('fxos-radio');
     document.body.appendChild(this.container);
   });
 
@@ -108,7 +108,7 @@ suite('GaiaRadio', function() {
       setTimeout(done);
     });
 
-    test('gaia-radios default states pass all accessibility checks mentioned ' +
+    test('fxos-radios default states pass all accessibility checks mentioned ' +
       'above and have attributes correctly set',
       function(done) {
         [a2, b2].forEach(r => testRadioAttributes(r, true, false));
@@ -117,7 +117,7 @@ suite('GaiaRadio', function() {
         accessibility.check(this.container).then(done, done);
       });
 
-    test('gaia-radios pass all accessibility checks mentioned above when ' +
+    test('fxos-radios pass all accessibility checks mentioned above when ' +
       'they are checked and unchecked', function(done) {
       b1.click();
       accessibility.check(this.container).then(() => {

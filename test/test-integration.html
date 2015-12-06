@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8" />
-  <title>gaia-radio</title>
-  <meta name="description" content="Integration tests for gaia-radio" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <link rel="stylesheet" href="../bower_components/gaia-theme/gaia-theme.css">
-  <link rel="stylesheet" href="../bower_components/gaia-fonts/style.css">
-  <link rel="stylesheet" href="../bower_components/base/base.css">
-  <script src="../bower_components/gaia-component/gaia-component.js"></script>
-  <script src="../gaia-radio.js"></script>
+  <meta charset="utf-8">
+  <title>fxos-radio</title>
+  <meta name="description" content="fxos-radio integration tests">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+  <link rel="stylesheet" href="../node_modules/fxos-theme/fxos-theme.css">
+  <link rel="stylesheet" href="../node_modules/fxos-font/fxos-font.css">
+  <script src="../node_modules/fxos-component/fxos-component.js"></script>
+  <script src="../fxos-radio.js"></script>
 </head>
 <body role="application">
   <label flex id="b1-label" for="b1">I'm a label</label>
-  <gaia-radio id="b1" name="b" checked></gaia-radio>
+  <fxos-radio id="b1" name="b" checked></fxos-radio>
   <label flex id="b2-label" for="b2">I'm a label</label>
-  <gaia-radio id="b2" name="b"></gaia-radio>
-  <gaia-radio id="b3" name="b" danger aria-label="b3"></gaia-radio>
+  <fxos-radio id="b2" name="b"></fxos-radio>
+  <fxos-radio id="b3" name="b" danger aria-label="b3"></fxos-radio>
   <label flex id="b4-label" for="b4">This is disabled</label>
-  <gaia-radio id="b4" name="b" disabled></gaia-radio>
+  <fxos-radio id="b4" name="b" disabled></fxos-radio>
 </body>
 </html>

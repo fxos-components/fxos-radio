@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>&lt;fxos-radio&gt;</title>
+  <meta name="description" content="fxos-radio demo">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+  <link rel="stylesheet" href="node_modules/fxos-theme/fxos-theme.css">
+  <link rel="stylesheet" href="node_modules/fxos-font/fxos-font.css">
+  <script src="node_modules/fxos-theme/lib/fxos-theme-selector.js"></script>
+  <script src="node_modules/fxos-component/fxos-component.js"></script>
+  <script src="node_modules/fxos-list/fxos-list.js"></script>
+  <script src="fxos-radio.js"></script>
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: var(--fxos-background);
+      color: var(--fxos-color);
+      font: 17px FiraSans;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    fxos-list {
+      max-width: 100%;
+      width: 400px;
+    }
+  </style>
+</head>
+<body role="application">
+  <fxos-theme-selector></fxos-theme-selector>
+  <fxos-list dividers>
+    <li>
+      <label flex for="b1">Option one</label>
+      <fxos-radio id="b1" name="a" checked></fxos-radio>
+    </li>
+    <li>
+      <label flex for="b2">Option two</label>
+      <fxos-radio id="b2" name="a"></fxos-radio>
+    </li>
+    <li disabled>
+      <label flex for="b4">Disabled option</label>
+      <fxos-radio id="b4" name="a"></fxos-radio>
+    </li>
+    <li>
+      <label flex for="b3">Dangerous option</label>
+      <fxos-radio id="b3" name="a" danger></fxos-radio>
+    </li>
+  </fxos-list>
+
+  <fxos-list dividers>
+    <li>
+      <label flex>Divided option one</label><span divider></span>
+      <fxos-radio checked name="b"></fxos-radio>
+    </li>
+    <li>
+      <label flex>Divided option two</label><span divider></span>
+      <fxos-radio name="b"></fxos-radio>
+    </li>
+  </fxos-list>
+</body>
+</html>

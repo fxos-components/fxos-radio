@@ -1,11 +1,10 @@
 {
-  "name": "gaia-radio",
-  "version": "0.0.0",
-  "homepage": "https://github.com/gaia-components/gaia-radio",
+  "name": "fxos-radio",
+  "homepage": "https://github.com/fxos-components/fxos-radio",
   "authors": [
     "Wilson Page <wilsonpage@me.com>"
   ],
-  "main": "gaia-radio.js",
+  "main": "fxos-radio.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -14,16 +13,11 @@
     "test",
     "tests",
     "index.html",
+    "webpack.config.js",
     "package.json",
     "README.md"
   ],
-  "devDependencies": {
-    "base": "gaia-components/base",
-    "gaia-fonts": "gaia-components/gaia-fonts",
-    "gaia-list": "gaia-components/gaia-list",
-    "gaia-theme": "gaia-components/gaia-theme"
-  },
   "dependencies": {
-    "gaia-component": "gaia-components/gaia-component#^0.3.9"
+    "fxos-component": "fxos-components/fxos-component#^1.0.0"
   }
 }
