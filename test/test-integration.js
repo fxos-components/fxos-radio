@@ -5,7 +5,7 @@
 var assert = require('chai').assert;
 marionette.plugin('helper', require('marionette-helper'));
 
-marionette('gaia-radio', function() {
+marionette('fxos-radio', function() {
   var client = marionette.client({
     profile: {
       prefs: {
@@ -78,7 +78,7 @@ marionette('gaia-radio', function() {
     });
   });
 
-  test('gaia-radios present and visible to the assistive technology',
+  test('fxos-radios present and visible to the assistive technology',
     function() {
       radios.forEach(function(radio) {
         // Element is found
@@ -86,14 +86,14 @@ marionette('gaia-radio', function() {
         // Element is visible to all (inlcuding assistive technology)
         failOnA11yError(function() {
           assert.isTrue(radio.element.displayed());
-        }, 'gaia-radio element should be visible both normally and to ' +
+        }, 'fxos-radio element should be visible both normally and to ' +
           'assistive technology.');
 
         assert.equal(isChecked(radio.element), radio.checked, radio.selector);
       });
   });
 
-  test('gaia-radio is accessible (no error thrown when clicking and tapping) ' +
+  test('fxos-radio is accessible (no error thrown when clicking and tapping) ' +
     'when it is checked or unchecked', function() {
     ['click', 'tap'].forEach(function(action) {
       radios.forEach(function(radio) {
@@ -109,7 +109,7 @@ marionette('gaia-radio', function() {
         if (radio.enabled) {
           failOnA11yError(function() {
             radio.element[action]();
-          }, 'gaia-radio should be clickable and tappable including via the ' +
+          }, 'fxos-radio should be clickable and tappable including via the ' +
             'assistive technology.');
           // Radio should be checked when it is clicked or tapped
           assert.equal(isChecked(radio.element), true, radio.selector);
@@ -118,7 +118,7 @@ marionette('gaia-radio', function() {
             radio.element[action]();
           } catch (err) {
             assert.equal(err.type, 'ElementNotAccessibleError', 'disabled ' +
-              'gaia-radio button is not clickable or tappable and ' +
+              'fxos-radio button is not clickable or tappable and ' +
               'clicking/tapping will result in an ElementNotAccessibleError.');
             // Disabled radio should not be checked when it is clicked or tapped
             assert.equal(isChecked(radio.element), false, radio.selector);
