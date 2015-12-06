@@ -21,7 +21,7 @@ module.exports = function(config) {
     files: [
       'bower_components/gaia-component/gaia-component.js',
       'gaia-radio.js',
-      'node_modules/test-utils/node_modules/axe-core/axe.min.js',
+      'node_modules/axe-core/axe.min.js',
       'node_modules/test-utils/src/utils.js',
       'node_modules/test-utils/src/accessibility.js',
       'test/test-unit.js'
