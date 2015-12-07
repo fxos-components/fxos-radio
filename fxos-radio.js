@@ -54,7 +54,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	
+
 	/**
 	 * Dependencies
 	 */
@@ -73,7 +73,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = component.register('fxos-radio', {
 	  created() {
 	    this.setupShadowRoot();
-	    this.makeAccessible();
 
 	    // Elements
 	    this.els = {
@@ -91,7 +90,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    // Bind label listeners in the next turn
 	    // to make sure that HTML has been parsed.
-	    setTimeout(() => this.bindLabels());
+	    setTimeout(() => {
+	    	this.makeAccessible();
+	    	this.bindLabels();
+	    });
 	  },
 
 	  /**
