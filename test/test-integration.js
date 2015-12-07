@@ -58,6 +58,18 @@ marionette('fxos-radio', function() {
   }
 
   /**
+   * Wait until makeAccessible method is called for all radios.
+   * @return {[type]} [description]
+   */
+  function waitForRadiosReady() {
+    client.waitFor(() => client.executeScript(function(selectors) {
+      return selectors.reduce((prev, selector) =>
+        prev && document.wrappedJSObject.querySelector(
+          selector).hasAttribute('role'), true);
+    }, [radios.map(radio => radio.selector)]));
+  }
+
+  /**
    * Perform a marionette operation and assert if an error is thrown.
    * @param  {Function} testFn operation to perform
    * @param  {String} message error message for the assert statement
@@ -76,6 +88,7 @@ marionette('fxos-radio', function() {
     radios.forEach(function(radio) {
       radio.element = client.helper.waitForElement(radio.selector);
     });
+    waitForRadiosReady();
   });
 
   test('fxos-radios present and visible to the assistive technology',
